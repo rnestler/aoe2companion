@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, Image, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
 import { formatAgo } from '../../helper/util';
 import { IFetchedUser, loadUser } from '../../service/user';
@@ -7,6 +7,8 @@ import { Searchbar } from 'react-native-paper';
 import { composeUserIdFromParts, UserInfo } from '../../helper/user';
 import { getFlagIcon } from '../../helper/flags';
 import {useCavy} from "cavy";
+import {useThrottle} from "../../hooks/use-throttle";
+import {throttle} from "lodash-es";
 
 interface IPlayerProps {
     player: IFetchedUser;
@@ -41,19 +43,19 @@ function Player({player, selectedUser}: IPlayerProps) {
 }
 
 export default function Search({title, selectedUser}: any) {
+    const generateTestHook = useCavy();
     const [text, setText] = useState('');
 
     const user = useLazyApi(loadUser, 'aoe2de', text);
+    const throttledSearch = useRef(throttle((searchText: string) => user.refetch('aoe2de', searchText), 1000, { leading: false, trailing: true }));
 
     const refresh = () => {
         if (text.length < 3) {
             user.reset();
             return;
         }
-        user.refetch('aoe2de', text);
+        throttledSearch.current(text);
     };
-
-    const generateTestHook = useCavy();
 
     useEffect(() => {
         refresh();
@@ -157,6 +159,7 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 20,
         flex: 1,
+        // backgroundColor: '#B89579',
         backgroundColor: '#fff',
     },
 });
