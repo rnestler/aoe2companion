@@ -33,9 +33,9 @@ export function MyText(props: MyTextProps) {
         fontStyle = fontDict[size];
     }
 
-    fontStyle = {
-        fontSize: 14,
-    };
+    // fontStyle = {
+    //     fontSize: 14,
+    // };
 
     return (
         <Text {...rest} style={[style, fontStyle]}>{children}</Text>

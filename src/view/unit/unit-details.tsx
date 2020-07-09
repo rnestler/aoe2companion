@@ -334,25 +334,50 @@ export default function UnitDetails({unitLineName}: {unitLineName: UnitLine}) {
                         <View style={styles.row}>
                             <MyText size="headline">{group.name}</MyText>
                         </View>
+                        <View style={styles.row}>
                         {
-                            group.upgrades.map(upgrade =>
-                                <View style={styles.row} key={upgrade.name}>
+                            group.upgrades.filter(g => !g.civ).map(upgrade =>
+                                <View style={styles.upgradeCol} key={upgrade.name}>
                                     <Image style={styles.unitIcon} source={getTechIcon(upgrade.tech)}/>
-                                    <MyText style={styles.unitDesc}>
-                                        <MyText style={appStyles.link} onPress={() => gotoTech(upgrade.tech!)}>{getTechName(upgrade.tech)}</MyText>
-                                        <MyText size="footnote">
-                                            {upgrade.effect[group.prop] ? ' (' + upgrade.effect[group.prop] : ''}
-                                            {/*{upgrade.effect[group.prop]}*/}
-                                            {
-                                                upgrade.civ &&
-                                                <>
-                                                    <MyText size="footnote">, only </MyText>
-                                                    <MyText size="footnote" style={appStyles.link} onPress={() => gotoCiv(upgrade.civ!)}>{upgrade.civ}</MyText>
-                                                </>
-                                            }
-                                            {upgrade.effect[group.prop] ? ')' : ''}
-                                        </MyText>
-                                    </MyText>
+                                    <MyText style={styles.unitDesc} size="footnote">{upgrade.effect[group.prop]}</MyText>
+                                    {/*<MyText style={styles.unitDesc}>*/}
+                                    {/*    <MyText style={appStyles.link} onPress={() => gotoTech(upgrade.tech!)}>{getTechName(upgrade.tech)+'\n'}</MyText>*/}
+                                    {/*    <MyText size="footnote">*/}
+                                    {/*        {upgrade.effect[group.prop]}*/}
+                                    {/*        {*/}
+                                    {/*            upgrade.civ &&*/}
+                                    {/*            <>*/}
+                                    {/*                <MyText size="footnote">, only </MyText>*/}
+                                    {/*                <MyText size="footnote" style={appStyles.link} onPress={() => gotoCiv(upgrade.civ!)}>{upgrade.civ}</MyText>*/}
+                                    {/*            </>*/}
+                                    {/*        }*/}
+                                    {/*    </MyText>*/}
+                                    {/*</MyText>*/}
+                                </View>
+                            )
+                        }
+                        </View>
+                        {
+                            group.upgrades.filter(g => g.civ).map(upgrade =>
+                                <View style={styles.row}>
+                                    {/*<View style={styles.upgradeCol} key={upgrade.name}>*/}
+                                        <Image style={styles.unitIcon} source={getTechIcon(upgrade.tech)}/>
+                                        <MyText style={styles.unitDesc}
+                                                size="footnote">{upgrade.effect[group.prop]}</MyText>
+                                        {/*<MyText style={styles.unitDesc}>*/}
+                                        {/*    <MyText style={appStyles.link} onPress={() => gotoTech(upgrade.tech!)}>{getTechName(upgrade.tech)+'\n'}</MyText>*/}
+                                        {/*    <MyText size="footnote">*/}
+                                        {/*        {upgrade.effect[group.prop]}*/}
+                                        {/*        {*/}
+                                        {/*            upgrade.civ &&*/}
+                                        {/*            <>*/}
+                                        {/*                <MyText size="footnote">, only </MyText>*/}
+                                        {/*                <MyText size="footnote" style={appStyles.link} onPress={() => gotoCiv(upgrade.civ!)}>{upgrade.civ}</MyText>*/}
+                                        {/*            </>*/}
+                                        {/*        }*/}
+                                        {/*    </MyText>*/}
+                                        {/*</MyText>*/}
+                                    {/*</View>*/}
                                 </View>
                             )
                         }
@@ -442,6 +467,11 @@ const styles = StyleSheet.create({
         color: '#333',
     },
 
+    upgradeCol: {
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+
     resIcon: {
         width: 22,
         height: 22,
@@ -453,6 +483,8 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     unitDesc: {
+        marginTop: 4,
         lineHeight: 20,
+        marginRight: 5,
     },
 });
