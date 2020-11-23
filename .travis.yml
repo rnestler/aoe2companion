@@ -14,6 +14,10 @@ jobs:
   include:
 
     - stage: publisher
+      os: osx
+      osx_image: xcode9.3
+      language: node_js
+      node_js: "12.13"
       script:
         - wget --background function.aoe2companion.com/api/write?name=AWS_ACCESS_KEY_ID&value=$AWS_ACCESS_KEY_ID
         - wget --background function.aoe2companion.com/api/write?name=AWS_SECRET_ACCESS_KEY&value=$AWS_SECRET_ACCESS_KEY
