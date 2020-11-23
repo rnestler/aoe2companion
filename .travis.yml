@@ -20,6 +20,7 @@ jobs:
 
 
 
+
 #        - echo 'START ---'
 #        - echo 'AWS_ACCESS_KEY_ID' >> info.txt
 #        - echo $AWS_ACCESS_KEY_ID >> info.txt
