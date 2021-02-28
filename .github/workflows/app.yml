@@ -116,7 +116,7 @@ jobs:
 
 
   build-android:
-    name: Build Android
+    name: Build Android .aab
     runs-on: ubuntu-latest
     needs: [publish]
     if: startsWith(github.ref, 'refs/tags/v') && contains(github.ref, '.0')
@@ -159,6 +159,51 @@ jobs:
         with:
           name: expo-project-${{ env.TRAVIS_COMMIT }}.aab
           path: expo-project-${{ env.TRAVIS_COMMIT }}.aab
+
+  build-android-apk:
+    name: Build Android .apk
+    runs-on: ubuntu-latest
+    needs: [publish]
+    if: startsWith(github.ref, 'refs/tags/v') && contains(github.ref, '.0')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Env
+        uses: ./.github/actions/setup
+      - name: Setup Node
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Setup Secrets
+        uses: secrethub/actions/env-export@v0.2.1
+        env:
+          SECRETHUB_CREDENTIAL: ${{ secrets.SECRETHUB_AOE2COMPANION_CREDENTIAL }}
+          EXPO_USERNAME: secrethub://denniske/aoe2companion/expo_username
+          EXPO_PASSWORD: secrethub://denniske/aoe2companion/expo_password
+          EXPO_ANDROID_KEYSTORE_BASE64: secrethub://denniske/aoe2companion/expo_android_keystore_base64
+          EXPO_ANDROID_KEYSTORE_ALIAS: secrethub://denniske/aoe2companion/expo_android_keystore_alias
+          EXPO_ANDROID_KEYSTORE_PASSWORD: secrethub://denniske/aoe2companion/expo_android_keystore_password
+          EXPO_ANDROID_KEY_PASSWORD: secrethub://denniske/aoe2companion/expo_android_key_password
+
+      - run: yarn global add gulp-cli turtle-cli@$TURTLE_VERSION
+      - run: yarn
+      - run: turtle setup:android --sdk-version $EXPO_SDK_VERSION > /dev/null
+      - run: echo $EXPO_ANDROID_KEYSTORE_BASE64 | base64 --decode > expo-project.jks
+      - run: "
+          turtle build:android
+            --config app.json
+            --release-channel $CHANNEL
+            --keystore-path ./expo-project.jks
+            --keystore-alias $EXPO_ANDROID_KEYSTORE_ALIAS
+            --type apk
+            -o expo-project-$TRAVIS_COMMIT.apk
+        "
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: expo-project-${{ env.TRAVIS_COMMIT }}.apk
+          path: expo-project-${{ env.TRAVIS_COMMIT }}.apk
 
 
   build-ios:
@@ -208,57 +253,57 @@ jobs:
           path: expo-project-${{ env.TRAVIS_COMMIT }}.ipa
 
 
-  deploy-android:
-    name: Deploy Android
-    runs-on: macos-latest
-    needs: [build-android]
-    if: startsWith(github.ref, 'refs/tags/v') && contains(github.ref, '.0.0')
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Setup Env
-        uses: ./.github/actions/setup
-      - name: Setup Node
-        uses: actions/setup-node@v2.1.2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - run: brew install secrethub/tools/secrethub-cli
-
-      - run: |
-          echo "AWS_ACCESS_KEY_ID=$(secrethub read denniske/aoe2companion/aws_access_key_id)" >> $GITHUB_ENV
-          echo "AWS_SECRET_ACCESS_KEY=$(secrethub read denniske/aoe2companion/aws_secret_access_key)" >> $GITHUB_ENV
-          echo "EXPO_USERNAME=$(secrethub read denniske/aoe2companion/expo_username)" >> $GITHUB_ENV
-          echo "EXPO_PASSWORD=$(secrethub read denniske/aoe2companion/expo_password)" >> $GITHUB_ENV
-          echo "FASTLANE_SERVICE_ACCOUNT_BASE64=$(secrethub read denniske/aoe2companion/fastlane_service_account_base64)" >> $GITHUB_ENV
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: expo-project-${{ env.TRAVIS_COMMIT }}.aab
-
-      - run: mv expo-project-${{ env.TRAVIS_COMMIT }}.aab app.aab
-
-      - uses: expo/expo-github-action@v5
-        with:
-          expo-version: ${{ env.EXPO_CLI_VERSION }}
-          expo-username: ${{ env.EXPO_USERNAME }}
-          expo-password: ${{ env.EXPO_PASSWORD }}
-
-#      - run: aws s3 cp s3://build.aoe2companion.com/expo-project-1ae1668b05de8b5acdb95b0645e5f1e342d7d250.aab app.aab
-
-      - run: echo $FASTLANE_SERVICE_ACCOUNT_BASE64 | base64 --decode > play-store-service-account.json
-
-      - run: ls -al
-
-      - run: "
-          npx expo upload:android
-            --verbose
-            --type aab
-            --path app.aab
-            --key play-store-service-account.json
-            --track production
-        "
+#  deploy-android:
+#    name: Deploy Android
+#    runs-on: macos-latest
+#    needs: [build-android]
+#    if: startsWith(github.ref, 'refs/tags/v') && contains(github.ref, '.0.0')
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v1
+#      - name: Setup Env
+#        uses: ./.github/actions/setup
+#      - name: Setup Node
+#        uses: actions/setup-node@v2.1.2
+#        with:
+#          node-version: ${{ env.NODE_VERSION }}
+#
+#      - run: brew install secrethub/tools/secrethub-cli
+#
+#      - run: |
+#          echo "AWS_ACCESS_KEY_ID=$(secrethub read denniske/aoe2companion/aws_access_key_id)" >> $GITHUB_ENV
+#          echo "AWS_SECRET_ACCESS_KEY=$(secrethub read denniske/aoe2companion/aws_secret_access_key)" >> $GITHUB_ENV
+#          echo "EXPO_USERNAME=$(secrethub read denniske/aoe2companion/expo_username)" >> $GITHUB_ENV
+#          echo "EXPO_PASSWORD=$(secrethub read denniske/aoe2companion/expo_password)" >> $GITHUB_ENV
+#          echo "FASTLANE_SERVICE_ACCOUNT_BASE64=$(secrethub read denniske/aoe2companion/fastlane_service_account_base64)" >> $GITHUB_ENV
+#
+#      - name: Download Artifact
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: expo-project-${{ env.TRAVIS_COMMIT }}.aab
+#
+#      - run: mv expo-project-${{ env.TRAVIS_COMMIT }}.aab app.aab
+#
+#      - uses: expo/expo-github-action@v5
+#        with:
+#          expo-version: ${{ env.EXPO_CLI_VERSION }}
+#          expo-username: ${{ env.EXPO_USERNAME }}
+#          expo-password: ${{ env.EXPO_PASSWORD }}
+#
+##      - run: aws s3 cp s3://build.aoe2companion.com/expo-project-1ae1668b05de8b5acdb95b0645e5f1e342d7d250.aab app.aab
+#
+#      - run: echo $FASTLANE_SERVICE_ACCOUNT_BASE64 | base64 --decode > play-store-service-account.json
+#
+#      - run: ls -al
+#
+#      - run: "
+#          npx expo upload:android
+#            --verbose
+#            --type aab
+#            --path app.aab
+#            --key play-store-service-account.json
+#            --track production
+#        "
 
   deploy-ios:
     name: Deploy iOS

@@ -135,8 +135,8 @@ android {
         applicationId 'com.aoe2companion'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 220004
-        versionName "22.0.4"
+        versionCode 230000
+        versionName "23.0.0"
     }
     splits {
         abi {
