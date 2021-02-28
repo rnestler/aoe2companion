@@ -10,6 +10,9 @@ module.exports = (async () => {
     } = await getDefaultConfig();
 
     return {
+        transformer: {
+            assetPlugins: ['expo-asset/tools/hashAssetFiles'],
+        },
         resolver: {
             blacklistRE: blacklist([/^tools\/.*/, /^website2\/.*/]),
             assetExts: [...assetExts, 'lazy'],

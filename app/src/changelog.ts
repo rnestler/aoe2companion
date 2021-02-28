@@ -16,6 +16,12 @@ export const changelog: IChangelog = {
     //         title: 'Added more localization (go to settings to change language)',
     //     },
     // ],
+    '22.0.5': [
+        {
+            type: 'minor',
+            title: 'Internal changes',
+        },
+    ],
     '22.0.4': [
         {
             type: 'feature',
